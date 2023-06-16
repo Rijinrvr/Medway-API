@@ -1,0 +1,68 @@
+extends layout
+
+block content
+
+  h1 search
+  input#search-box(type='text' onkeyup='sendData(this)')
+  section#searchResults
+  script.
+    function sendData(e){
+    const searchResults=document.getElementById('searchResults')
+    fetch('getArticles',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({payload: e.value})
+      }).then(res => res.json()).then(data => {
+        let payload=data.payload;
+        searchResults.innerHTML='';
+      if(payload.length < 1){
+      searchResults.innerHTML='<p>Sorry nothing found</p>';
+      return;
+    }
+    payload.forEach((item,index)=>{
+    if(index > 0) searchResults.innerHTML += '<hr>';
+
+      searchResults.innerHTML += `<p> <h5>${item.medicine}</h5> <br> Priscribed by Dr.${item.doctorname} <br>Discription  : ${item.discription} </p>`
+         
+    })
+    return
+    })
+    }
+
+
+//- extends layout
+
+//- block content
+
+//-   h1 Search
+//-   input#search-box(type='text' onkeyup='sendData(this)')
+//-   section#searchResults
+
+//-   script.
+//-     function sendData(e) {
+//-       const searchResults = document.getElementById('searchResults');
+//-       fetch('getMedicines', {
+//-         method: 'POST',
+//-         headers: {'Content-Type': 'application/json'},
+//-         body: JSON.stringify({payload: e.value})
+//-       })
+//-       .then(res => res.json())
+//-       .then(data => {
+//-         let payload = data.payload;
+//-         searchResults.innerHTML = '';
+//-         if (payload.length < 1) {
+//-           searchResults.innerHTML = '<p>No results found</p>';
+//-           return;
+//-         }
+//-         payload.forEach((medicine) => {
+//-           const link = document.createElement('a');
+//-           link.setAttribute('href', `/medicine/${medicine.id}`);
+//-           link.innerHTML = medicine.name;
+//-           const p = document.createElement('p');
+//-           p.appendChild(link);
+//-           searchResults.appendChild(p);
+//-         });
+//-       })
+//-       .catch(error => console.error(error));
+//-     }
+
